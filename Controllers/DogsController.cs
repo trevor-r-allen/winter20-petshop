@@ -1,94 +1,110 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using petshop.db;
+// using petshop.db;
 using petshop.Models;
+using petshop.Services;
 
-namespace petshop.Controllers
+namespace petshop
 {
   [ApiController]
   [Route("api/[controller]")]
   public class DogsController : ControllerBase
   {
+
+
+    private readonly DogsService _ds;
+    public DogsController(DogsService ds)
+    {
+      _ds = ds;
+    }
+
     [HttpGet]
     public ActionResult<IEnumerable<Dog>> Get()
     {
       try
       {
-        return Ok(FAKEDB.Dogs);
+        return Ok(_ds.Get());
       }
-      catch (System.Exception err)
+      catch (Exception e)
       {
-
-        return BadRequest(err.Message);
+        return BadRequest(e.Message);
       }
     }
 
-    [HttpGet("{dogId}")]
-    public ActionResult<Dog> GetDogById(string dogId)
+    // REVIEW
+    [HttpGet("{id}")]
+    public ActionResult<Dog> Get(string id)
     {
       try
       {
-        Dog dogToReturn = FAKEDB.Dogs.Find(d => d.Id == dogId);
-        return Ok(dogToReturn);
+        Dog dog = _ds.Get(id);
+        return Ok(dog);
       }
-      catch (System.Exception err)
+      catch (Exception e)
       {
-
-        return BadRequest(err.Message);
+        return BadRequest(e.Message);
       }
+
     }
+
 
     [HttpPost]
     public ActionResult<Dog> Create([FromBody] Dog newDog)
     {
       try
       {
-        FAKEDB.Dogs.Add(newDog);
-        return Ok(newDog);
+        Dog dog = _ds.Create(newDog);
+        return Ok(dog);
       }
-      catch (System.Exception err)
+      catch (Exception e)
       {
-
-        return BadRequest(err.Message);
+        return BadRequest(e.Message);
       }
     }
 
-    [HttpPut("{dogId}")]
-    public ActionResult<Dog> EditDog([FromBody] Dog editedDog, string dogId)
+    [HttpPut("{id}")]
+    public ActionResult<Dog> Edit([FromBody] Dog updated, string id)
     {
       try
       {
-        Dog dogToEdit = FAKEDB.Dogs.Find(d => d.Id == dogId);
-        FAKEDB.Dogs.Remove(dogToEdit);
-        dogToEdit.Name = editedDog.Name != null ? editedDog.Name : dogToEdit.Name;
-        dogToEdit.Description = editedDog.Description != null ? editedDog.Description : dogToEdit.Description;
-        dogToEdit.IsAGoodBoy = editedDog.IsAGoodBoy;
-        FAKEDB.Dogs.Add(dogToEdit);
-        return Ok(dogToEdit);
+        // Dog dog = FAKEDB.Dogs.Find(d => d.Id == id);
+        // if (dog == null)
+        // {
+        //   throw new Exception("invalid Id");
+        // }
+        // FAKEDB.Dogs.Remove(dog);
+        // updated.Id = id;
+        // FAKEDB.Dogs.Add(updated);
+        updated.Id = id;
+        Dog dog = _ds.Edit(updated);
+        return Ok(dog);
       }
-      catch (System.Exception err)
+      catch (Exception e)
       {
-
-        return BadRequest(err.Message);
+        return BadRequest(e.Message);
       }
     }
 
-    [HttpDelete("{dogId}")]
-    public ActionResult<string> RemoveDog(string dogId)
+
+    [HttpDelete("{id}")]
+    public ActionResult<String> Delete(string id)
     {
+
       try
       {
-        Dog dogToRemove = FAKEDB.Dogs.Find(d => d.Id == dogId);
-        FAKEDB.Dogs.Remove(dogToRemove);
-        return Ok("Dog Removed");
+        _ds.Adopt(id);
+        return Ok("Adopted");
       }
-      catch (System.Exception err)
+      catch (Exception e)
       {
-
-        return BadRequest(err.Message);
+        return BadRequest(e.Message);
       }
     }
+
+
 
 
   }
+
 }
