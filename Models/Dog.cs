@@ -10,8 +10,21 @@ namespace petshop.Models
     public string Name { get; set; }
     [MaxLength(50)]
     public string Description { get; set; }
+    public bool WasSet { get; set; }
+    private bool _IsAGoodBoy { get; set; }
     [Required]
-    public bool IsAGoodBoy { get; set; }
+    public bool IsAGoodBoy
+    {
+      get
+      {
+        return _IsAGoodBoy;
+      }
+      set
+      {
+        WasSet = true;
+        _IsAGoodBoy = value;
+      }
+    }
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public Dog(string name, string description, bool isAGoodBoy)
     {
