@@ -31,5 +31,19 @@ namespace petshop.Models
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
 
+    public bool wasSet { get; set; }
+    private int _someInt;
+    public int someInt
+    {
+      get
+      {
+        return _someInt;
+      }
+      set
+      {
+        wasSet = true;
+        _someInt = value;
+      }
+    }
   }
 }
