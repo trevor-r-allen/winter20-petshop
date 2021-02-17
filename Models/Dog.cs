@@ -3,35 +3,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace petshop.Models
 {
+
+
+
   public class Dog
   {
     [Required]
-    [MinLength(3)]
     public string Name { get; set; }
-    [MaxLength(50)]
-    public string Description { get; set; }
-    public bool WasSet { get; set; }
-    private bool _IsAGoodBoy { get; set; }
-    [Required]
-    public bool IsAGoodBoy
-    {
-      get
-      {
-        return _IsAGoodBoy;
-      }
-      set
-      {
-        WasSet = true;
-        _IsAGoodBoy = value;
-      }
-    }
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-    public Dog(string name, string description, bool isAGoodBoy)
-    {
-      this.Name = name;
-      this.Description = description;
-      this.IsAGoodBoy = isAGoodBoy;
+    [Range(0, 100)]
+    public int Age { get; set; }
+    public bool Hungry { get; set; } = true;
 
-    }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+
   }
+
+
 }
